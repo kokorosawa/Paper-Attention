@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ArXiv Presence Settings</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 16px; }
+    label { display: block; margin-top: 12px; }
+    input[type="text"], input[type="number"] { width: 320px; padding: 6px; }
+    .actions { margin-top: 16px; }
+  </style>
+</head>
+<body>
+  <h2>ArXiv Presence Settings</h2>
+  <label>
+    Helper endpoint
+    <input id="endpoint" type="text" placeholder="http://127.0.0.1:37425/presence" />
+  </label>
+  <label>
+    Poll interval (ms)
+    <input id="poll" type="number" min="1000" step="500" />
+  </label>
+  <label>
+    Show button to arXiv page
+    <input id="buttons" type="checkbox" />
+  </label>
+  <label>
+    Enable debug logs
+    <input id="debug" type="checkbox" />
+  </label>
+  <div class="actions">
+    <button id="save">Save</button>
+    <span id="status"></span>
+  </div>
+  <script src="options.js"></script>
+</body>
+</html>

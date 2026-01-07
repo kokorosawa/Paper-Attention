@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "ArXiv Discord Presence",
+  "name": "Paper Attention",
   "version": "0.1.0",
-  "description": "Show your current arXiv paper in Discord Rich Presence.",
+  "description": "Show your current arXiv page in Discord Rich Presence (unofficial).",
   "permissions": ["activeTab", "storage"],
   "host_permissions": ["https://arxiv.org/*"],
   "background": {

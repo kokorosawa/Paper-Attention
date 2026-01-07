@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Paper Attention Helper</title>
+  <style>
+    :root {
+      --bg: #f7f8fb;
+      --card: #ffffff;
+      --text: #1f2a3d;
+      --muted: #6b7280;
+      --accent: #0f766e;
+      --accent-2: #2563eb;
+      --danger: #c0392b;
+      --border: #e5e7eb;
+      --shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      display: flex;
+      justify-content: center;
+    }
+    .shell {
+      width: 420px;
+      padding: 18px;
+    }
+    h2 {
+      margin: 0 0 12px;
+      font-size: 20px;
+      letter-spacing: 0.2px;
+    }
+    p.desc {
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 14px 16px;
+      box-shadow: var(--shadow);
+      margin-bottom: 14px;
+    }
+    label { display: block; margin-top: 12px; font-weight: 600; font-size: 13px; }
+    input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #fdfefe;
+      color: var(--text);
+      outline: none;
+    }
+    input:focus { border-color: var(--accent-2); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12); }
+    .row { display: flex; gap: 10px; align-items: center; }
+    .row.inline { margin-top: 12px; }
+    .btn {
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      flex: 1;
+    }
+    .btn.start { background: linear-gradient(135deg, var(--accent) 0%, #14b8a6 100%); color: #fff; }
+    .btn.stop { background: var(--danger); color: #fff; }
+    .btn.secondary { background: #e5e7eb; color: var(--text); flex: none; }
+    .status-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+    .pill {
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      color: #fff;
+    }
+    .pill.on { background: var(--accent-2); }
+    .pill.off { background: var(--muted); }
+    #status { color: var(--muted); font-size: 12px; }
+    #log {
+      margin-top: 10px;
+      background: #0b1221;
+      color: #d1d5db;
+      padding: 10px;
+      border-radius: 10px;
+      height: 140px;
+      overflow: auto;
+      white-space: pre-wrap;
+      font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <h2>Paper Attention Helper</h2>
+    <p class="desc">啟動本機 helper 並連動 Discord Rich Presence。</p>
+
+    <div class="card">
+      <div class="row inline">
+        <span id="statusPill" class="pill off">OFF</span>
+        <span id="status">Idle</span>
+      </div>
+
+      <label>Discord Application ID
+        <input id="clientId" type="text" placeholder="e.g. 1234567890" />
+      </label>
+      <label>Port
+        <input id="port" type="number" min="1" max="65535" />
+      </label>
+      <label>Large Image Key
+        <input id="largeImageKey" type="text" placeholder="brand-supergraphic" />
+      </label>
+      <label class="row inline">
+        <input id="debug" type="checkbox" /> Debug log
+      </label>
+
+      <div class="row inline">
+        <button class="btn start" id="startBtn">Start Helper</button>
+        <button class="btn stop" id="stopBtn">Stop</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="row inline" style="justify-content: space-between; align-items: center;">
+        <strong>Logs</strong>
+        <button class="btn secondary" id="clearLog">Clear</button>
+      </div>
+      <div id="log"></div>
+    </div>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>

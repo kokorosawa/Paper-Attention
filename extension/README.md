@@ -1,4 +1,4 @@
-# ArXiv Discord Presence (Chrome/Edge extension)
+# Paper Attention (Chrome/Edge extension)
 
 This MV3 extension harvests the current arXiv page (title, authors, id) and forwards it to a small local helper that talks to Discord Rich Presence. The background service worker POSTs to `http://127.0.0.1:37425/presence`, so keep the helper running.
 

@@ -27,7 +27,7 @@ const postToHelper = async (payload) => {
   chrome.storage?.local?.set({ lastPayload: payload });
 
   try {
-    if (config.debug) console.log("[arxiv-presence] POST", payload);
+    if (config.debug) console.log("[paper-attention] POST", payload);
     await fetch(config.endpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -35,7 +35,7 @@ const postToHelper = async (payload) => {
     });
     warnedHelperDown = false;
   } catch (err) {
-    console.warn("ArXiv Presence helper not reachable", err);
+    console.warn("Paper Attention helper not reachable", err);
     if (!warnedHelperDown) {
       // Avoid spamming; warn only once per failure streak.
       warnedHelperDown = true;
@@ -59,7 +59,7 @@ const postWithRetry = async (payload) => {
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message?.type === "presence-update" && message.payload) {
-    if (config.debug) console.log("[arxiv-presence] recv", message.payload);
+    if (config.debug) console.log("[paper-attention] recv", message.payload);
     const enriched = { ...message.payload, buttons: config.buttons };
     postWithRetry(enriched);
     sendResponse({ ok: true });
@@ -69,7 +69,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 chrome.runtime.onInstalled.addListener(() => {
-  console.log("ArXiv Discord Presence extension installed.");
+  console.log("Paper Attention extension installed.");
 });
 
 // Reload config when service worker starts, and resend last payload if available.

@@ -3,7 +3,7 @@ const RPC = require("discord-rpc");
 
 const PORT = parseInt(process.env.PORT || "37425", 10);
 const CLIENT_ID = process.env.DISCORD_CLIENT_ID || "1456497729436913810";
-const LARGE_IMAGE_KEY = process.env.LARGE_IMAGE_KEY || "brand-supergraphic";
+const LARGE_IMAGE_KEY = process.env.LARGE_IMAGE_KEY || "microscope";
 const DEBUG = process.env.DEBUG === "1";
 
 if (!CLIENT_ID || CLIENT_ID === "your_discord_client_id") {
@@ -26,11 +26,11 @@ rpc.login({ clientId: CLIENT_ID }).catch((err) => {
 
 const setPresence = (payload) => {
   if (!rpcReady) return;
-  const details = (payload.title || "Reading arXiv").slice(0, 120);
+  const details = (payload.title || "Reading a paper").slice(0, 120);
   const authors = Array.isArray(payload.authors) ? payload.authors : [];
   const shownAuthors = authors.slice(0, 2);
   const extra = authors.length > 2 ? ` +${authors.length - 2}` : "";
-  const state = shownAuthors.length ? `${shownAuthors.join(", ")}${extra}` : payload.id || "arXiv";
+  const state = shownAuthors.length ? `${shownAuthors.join(", ")}${extra}` : payload.id || "Paper";
   const startTimestamp = payload.timestamp
     ? Math.floor(Number(payload.timestamp) / 1000)
     : Math.floor(Date.now() / 1000);
@@ -39,7 +39,7 @@ const setPresence = (payload) => {
     details,
     state,
     largeImageKey: LARGE_IMAGE_KEY,
-    largeImageText: "arXiv",
+    largeImageText: "Paper Attention",
     startTimestamp,
     type: 0,
     instance: true,
@@ -48,7 +48,7 @@ const setPresence = (payload) => {
   if (payload.url && payload.buttons !== false) {
     activity.buttons = [
       {
-        label: "View on arXiv",
+        label: "View paper",
         url: payload.url,
       },
     ];

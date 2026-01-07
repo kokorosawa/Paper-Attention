@@ -1,28 +1,42 @@
-# ArXiv → Discord Rich Presence
+# Paper Attention
 
-This project has two parts:
-- `extension/`: Chrome/Edge MV3 extension that reads arXiv pages and POSTs metadata to a local helper.
-- `helper/`: Node.js HTTP server that relays the metadata to Discord via `discord-rpc`.
+English | [繁體中文](README_zh.md)
 
-## Quick start
-1) Prepare the helper
+Shows what you are reading on arXiv in Discord Rich Presence via a lightweight helper and browser extension.
+
+Not affiliated with arXiv or Cornell; uses public arXiv pages only. Disclaimer: personal/educational use only; no endorsement by arXiv/Cornell; provide your own assets/icons and avoid third-party trademarks.
+
+## What you need
+- Chrome or Edge
+- Discord desktop running
+- Node.js 18+ (to run the helper)
+- A Discord application client ID (Rich Presence)
+
+## Install & run (GUI)
+1) Install and launch the GUI helper
 ```bash
-cd helper
+cd gui
 npm install
-DISCORD_CLIENT_ID=your_app_id npm start
+npm start
 ```
-- Ensure your Discord app has a large image asset named `arxiv`.
-- Default helper endpoint: `http://127.0.0.1:37425/presence`.
+- 在 the GUI, enter your Discord application client ID, then click **Start Helper**. Default endpoint stays `http://127.0.0.1:37425/presence` unless you change the port.
+- Optional: upload your own large image asset in the Discord app (avoid arXiv marks) and set `Large Image Key` in the GUI.
 
 2) Load the extension
-- Chrome/Edge → Extensions → Developer Mode → Load unpacked → choose `extension/`.
-- Open an arXiv page; the helper console should log incoming updates.
+- Chrome/Edge → Extensions → enable Developer Mode → Load unpacked → pick the `extension/` folder.
+- Open any arXiv paper page; the GUI log should show incoming updates.
 
-## Customizing
-- Change helper port: set `PORT` env var **and** update `HELPER_ENDPOINT` in `extension/background.js`.
-- Presence contents are formatted in `helper/index.js` (`details`, `state`, `buttons`).
+## Usage
+- Keep Discord and the helper running.
+- Visit an arXiv abstract/PDF page; presence updates automatically.
+- Buttons: enabled by default; toggle in extension options if you prefer none.
 
-## Folder layout
-- `extension/content.js`: scrapes page metadata (title, authors, arXiv ID) and notifies background.
-- `extension/background.js`: posts deduped updates to the helper.
-- `helper/index.js`: receives POSTs, sets Discord Rich Presence.
+## Configuration
+- Change helper port: set `PORT` env and update `HELPER_ENDPOINT` in `extension/background.js`.
+- Presence text/buttons: edit `helper/index.js` (`details`, `state`, `buttons`, `largeImageText`).
+- Debug logs: toggle in extension options; set `DEBUG=1` for helper verbose logs.
+
+## Troubleshooting
+- No update? Check helper console for POST logs and ensure Discord is open.
+- Asset missing? Either upload your own and set `LARGE_IMAGE_KEY`, or run without an image.
+- Buttons not showing? Discord app must allow buttons and the URL must be valid.

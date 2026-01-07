@@ -1,10 +1,11 @@
-# ArXiv Discord Presence helper
+# Paper Attention helper
 
 Bridges the browser extension and Discord Rich Presence. Runs a tiny HTTP server that accepts POSTs from the extension and updates Discord via `discord-rpc` (IPC transport).
+Disclaimer: personal/educational use only; no endorsement by arXiv/Cornell; provide your own assets/icons and avoid third-party trademarks.
 
 ## Prerequisites
 - Discord desktop client running.
-- A Discord application with an asset named `arxiv` (large image) and its client ID.
+- (Optional) A Discord application with a large image asset you own (avoid arXiv trademarks or official logos) and its client ID.
 - Node.js 18+.
 
 ## Setup

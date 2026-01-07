@@ -9,3 +9,7 @@ build/
 *.swp
 *.swo
 .cache/
+gui/node_modules/
+gui/dist/
+gui/out/
+gui/*.log

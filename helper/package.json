@@ -1,7 +1,7 @@
 {
-  "name": "arxiv-discord-presence-helper",
+  "name": "paper-attention-helper",
   "version": "0.1.0",
-  "description": "Local helper that bridges arXiv metadata from a browser extension to Discord Rich Presence.",
+  "description": "Local helper that bridges paper metadata from a browser extension to Discord Rich Presence.",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"

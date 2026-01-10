@@ -1,11 +1,26 @@
-# Paper Attention（中文指南）
 
-[English](README.md) | 繁體中文
+
+<div align="center">
+<span href="README_zh-Hant.md">繁體中文</span> | <a href="README.md">English</a>
+
+<h1><img src="assets/icon.png" width="24" height="24" alt="Paper Attention Logo"/> Paper Attention</h1>
+</div>
+
+<!-- <img src="https://img.shields.io/github/last-commit/kokorosawa/kkbox-discord-rpc.svg">
+<img src="https://img.shields.io/github/release/kokorosawa/Paper-Attention">
+<img src="https://img.shields.io/github/release/kokorosawa/kkbox-discord-rpc">
+<img src="https://img.shields.io/github/stars/kokorosawa/kkbox-discord-rpc?label=Stars"> -->
+
+<div align="center">
+<img src="assets/demo.png" alt="Paper Attention Demo"/>
+</div>
+
+
+# About
 
 讓 Discord Rich Presence 顯示你正在看的 arXiv 論文，透過瀏覽器擴充與本機 helper 完成。
 
 本專案與 arXiv / Cornell 無關，僅透過公開的 arXiv 網頁資訊運作。免責聲明：僅供個人／教育用途，與 arXiv / Cornell 無從屬或背書關係；請自備圖示與素材，避免使用第三方商標。
-
 
 ## 安裝與啟動（使用 GUI）
 1) 安裝並啟動 Paper Attention

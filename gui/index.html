@@ -110,17 +110,16 @@
         <span id="status">Idle</span>
       </div>
 
-      <label>Discord Application ID
-        <input id="clientId" type="text" placeholder="e.g. 1234567890" />
+      <p class="desc" style="margin: 8px 0 12px;">Discord 設定已內建，直接啟動即可。</p>
+
+      <label class="row inline" style="justify-content: flex-start; gap: 8px;">
+        <input id="autostart" type="checkbox" />
+        <span>Windows 開機自動啟動</span>
       </label>
-      <label>Port
-        <input id="port" type="number" min="1" max="65535" />
-      </label>
-      <label>Large Image Key
-        <input id="largeImageKey" type="text" placeholder="brand-supergraphic" />
-      </label>
-      <label class="row inline">
-        <input id="debug" type="checkbox" /> Debug log
+
+      <label class="row inline" style="justify-content: flex-start; gap: 8px;">
+        <input id="debugOpt" type="checkbox" />
+        <span>Debug log</span>
       </label>
 
       <div class="row inline">

@@ -2,21 +2,24 @@
   "name": "paper-attention-gui",
   "version": "0.1.0",
   "main": "main.js",
+  "productName": "Paper Attention",
   "description": "GUI wrapper for Paper Attention helper (Electron)",
+  "appId": "com.paperattention.app",
   "scripts": {
     "start": "electron .",
     "build:mac-arm64": "electron-builder --mac --arm64",
     "build:win-x64": "electron-builder --win --x64"
   },
-  "dependencies": {
-    "electron-store": "^8.1.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "electron": "^29.3.0",
     "electron-builder": "^24.13.3"
   },
   "build": {
-    "asar": false,
+    "asar": true,
+    "asarUnpack": [
+      "helper/**"
+    ],
     "directories": {
       "buildResources": "build"
     },
@@ -25,6 +28,11 @@
       "**/*"
     ],
     "extraResources": [
+      {
+        "from": "build",
+        "to": "build",
+        "filter": ["icon.png", "icon.ico"]
+      },
       {
         "from": "../helper",
         "to": "helper",
@@ -44,6 +52,8 @@
       "icon": "build/icon.icns"
     },
     "win": {
+      "artifactName": "Paper Attention Setup.${ext}",
+      "executableName": "Paper Attention",
       "target": [
         {
           "target": "nsis",

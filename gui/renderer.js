@@ -1,27 +1,7 @@
 const $ = (id) => document.getElementById(id);
 
-const load = async () => {
-  const cfg = await window.api.getConfig();
-  $("clientId").value = cfg.clientId || "";
-  $("port").value = cfg.port || 37425;
-  $("largeImageKey").value = cfg.largeImageKey || "brand-supergraphic";
-  $("debug").checked = !!cfg.debug;
-};
-
-const save = async () => {
-  const cfg = {
-    clientId: $("clientId").value.trim(),
-    port: Number($("port").value) || 37425,
-    largeImageKey: $("largeImageKey").value.trim() || "brand-supergraphic",
-    debug: $("debug").checked,
-  };
-  await window.api.saveConfig(cfg);
-  return cfg;
-};
-
 $("startBtn").addEventListener("click", async () => {
-  const cfg = await save();
-  const status = await window.api.startHelper(cfg);
+  const status = await window.api.startHelper();
   renderStatus(status);
 });
 
@@ -43,6 +23,26 @@ $("clearLog").addEventListener("click", () => {
   $("log").textContent = "";
 });
 
+const initAutostart = async () => {
+  const enabled = await window.api.getAutostart();
+  $("autostart").checked = !!enabled;
+};
+
+$("autostart").addEventListener("change", async (e) => {
+  const enabled = e.target.checked;
+  await window.api.setAutostart(enabled);
+});
+
+const initDebug = async () => {
+  const enabled = await window.api.getDebug();
+  $("debugOpt").checked = !!enabled;
+};
+
+$("debugOpt").addEventListener("change", async (e) => {
+  const enabled = e.target.checked;
+  await window.api.setDebug(enabled);
+});
+
 const renderStatus = (status) => {
   $("status").textContent = status.lastMessage || (status.running ? "running" : "stopped");
   const pill = $("statusPill");
@@ -50,5 +50,6 @@ const renderStatus = (status) => {
   pill.classList.toggle("on", !!status.running);
   pill.classList.toggle("off", !status.running);
 };
-
-load();
+renderStatus({ running: false, lastMessage: "Idle" });
+initAutostart();
+initDebug();

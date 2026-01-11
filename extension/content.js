@@ -3,6 +3,26 @@
   let pollMs = 5000;
   let lastSent = null;
   let debug = false;
+  let firstSeenTs = null;
+  let lastId = null;
+
+  const tsKey = (id) => `paper-attention-ts:${id}`;
+  const loadStoredTs = (id) => {
+    try {
+      const v = sessionStorage.getItem(tsKey(id));
+      const n = Number(v);
+      return Number.isFinite(n) ? n : null;
+    } catch (err) {
+      return null;
+    }
+  };
+  const saveStoredTs = (id, ts) => {
+    try {
+      sessionStorage.setItem(tsKey(id), String(ts));
+    } catch (err) {
+      /* ignore storage errors (e.g., disabled storage) */
+    }
+  };
 
   const getMetaContents = (name) => {
     const nodes = document.querySelectorAll(`meta[name="${name}"]`);
@@ -25,6 +45,16 @@
     const id = parseArxivId(url);
     if (!id) return null;
 
+    if (id !== lastId) {
+      lastId = id;
+      firstSeenTs = loadStoredTs(id) || Date.now();
+      saveStoredTs(id, firstSeenTs);
+    }
+    if (!firstSeenTs) {
+      firstSeenTs = loadStoredTs(id) || Date.now();
+      saveStoredTs(id, firstSeenTs);
+    }
+
     const title = getMetaContents("citation_title")[0] || document.title || "arXiv";
     const authors = getMetaContents("citation_author");
     const summaryMeta = getMetaContents("description")[0] || "";
@@ -36,7 +66,7 @@
       authors,
       summary: summaryMeta,
       pageType: url.includes("/pdf/") ? "pdf" : "abs",
-      timestamp: Date.now(),
+      timestamp: firstSeenTs,
     };
   };
 

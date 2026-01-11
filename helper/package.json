@@ -7,6 +7,6 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "discord-rpc": "^4.0.1"
+    "@nyabsi/minimal-discord-rpc": "^1.0.1"
   }
 }

@@ -1,5 +1,5 @@
 const http = require("http");
-const RPC = require("discord-rpc");
+const { Client, ActivityType } = require("@nyabsi/minimal-discord-rpc");
 
 const PORT = parseInt(process.env.PORT || "37425", 10);
 const CLIENT_ID = process.env.DISCORD_CLIENT_ID || "1456497729436913810";
@@ -10,8 +10,7 @@ if (!CLIENT_ID || CLIENT_ID === "your_discord_client_id") {
   console.warn("Set DISCORD_CLIENT_ID to your Discord application's client ID.");
 }
 
-RPC.register(CLIENT_ID);
-const rpc = new RPC.Client({ transport: "ipc" });
+const rpc = new Client({ clientId: CLIENT_ID });
 let rpcReady = false;
 
 rpc.on("ready", () => {
@@ -19,7 +18,12 @@ rpc.on("ready", () => {
   console.log("Discord RPC ready as", CLIENT_ID);
 });
 
-rpc.login({ clientId: CLIENT_ID }).catch((err) => {
+rpc.on("close", (reason) => {
+  rpcReady = false;
+  console.warn("Discord RPC closed", reason);
+});
+
+rpc.login().catch((err) => {
   console.error("Failed to login to Discord RPC", err);
   process.exit(1);
 });
@@ -31,17 +35,19 @@ const setPresence = (payload) => {
   const shownAuthors = authors.slice(0, 2);
   const extra = authors.length > 2 ? ` +${authors.length - 2}` : "";
   const state = shownAuthors.length ? `${shownAuthors.join(", ")}${extra}` : payload.id || "Paper";
-  const startTimestamp = payload.timestamp
-    ? Math.floor(Number(payload.timestamp) / 1000)
-    : Math.floor(Date.now() / 1000);
+  const startTimestamp = payload.timestamp && Number.isFinite(Number(payload.timestamp))
+    ? Number(payload.timestamp)
+    : Date.now();
 
   const activity = {
+    type: ActivityType.Watching,
     details,
     state,
-    largeImageKey: LARGE_IMAGE_KEY,
-    largeImageText: "Paper Attention",
-    startTimestamp,
-    type: 0,
+    timestamps: { start: startTimestamp },
+    assets: {
+      large_image: LARGE_IMAGE_KEY,
+      large_text: "Paper Attention",
+    },
     instance: true,
   };
 
@@ -64,8 +70,7 @@ const setPresence = (payload) => {
       // Retry without large image if asset is missing.
       try {
         const fallback = { ...activity };
-        delete fallback.largeImageKey;
-        delete fallback.largeImageText;
+        delete fallback.assets;
         await rpc.setActivity(fallback);
       } catch (err2) {
         console.error("Failed to set activity without image", err2);

@@ -9,6 +9,7 @@
 <div align="center">
 <img src="https://img.shields.io/github/last-commit/kokorosawa/Paper-Attention.svg">
 <img src="https://img.shields.io/github/release/kokorosawa/Paper-Attention">
+<img src="https://img.shields.io/github/stars/kokorosawa/Paper-Attention">
 </div>
 
 <div align="center">

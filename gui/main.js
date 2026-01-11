@@ -16,6 +16,15 @@ let helperStatus = { running: false, lastMessage: "" };
 let tray;
 let quitting = false;
 let debugEnabled = FIXED_CONFIG.debug;
+const isMac = process.platform === "darwin";
+const trayEmoji = "🔬";
+
+const loadTrayIcon = (iconPath) => {
+  const img = nativeImage.createFromPath(iconPath);
+  if (img.isEmpty()) return null;
+  const size = isMac ? 18 : 20; // shrink so the tray icon is not oversized
+  return img.resize({ width: size, height: size, quality: "best" });
+};
 
 const sendToRenderer = (channel, payload) => {
   if (!mainWindow || mainWindow.isDestroyed()) return;
@@ -45,6 +54,39 @@ const createWindow = () => {
   });
 };
 
+const rebuildMacMenu = () => {
+  if (!isMac) return;
+
+  const template = [
+    {
+      label: app.name,
+      submenu: [
+        { label: "顯示視窗", click: () => toggleWindow() },
+        { type: "separator" },
+        {
+          id: "helper-toggle",
+          label: helperStatus.running ? "停止 Helper" : "啟動 Helper",
+          type: "checkbox",
+          checked: helperStatus.running,
+          click: (item) => {
+            if (item.checked) {
+              startHelper();
+            } else {
+              stopHelper();
+            }
+            rebuildMacMenu();
+          },
+        },
+        { type: "separator" },
+        { role: "quit", label: "結束" },
+      ],
+    },
+  ];
+
+  const menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
+};
+
 const getHelperPath = () => {
   const devPath = path.join(__dirname, "..", "helper", "index.js");
   if (fs.existsSync(devPath)) return devPath;
@@ -66,10 +108,12 @@ const startHelper = () => {
 
   helperProc = fork(helperPath, [], { env, stdio: "pipe" });
   helperStatus = { running: true, lastMessage: "" };
+  rebuildMacMenu();
 
   helperProc.on("exit", (code) => {
     helperProc = null;
     helperStatus = { running: false, lastMessage: "" };
+    rebuildMacMenu();
     sendToRenderer("helper-status", helperStatus);
   });
 
@@ -97,8 +141,14 @@ const getTrayIcon = () => {
     if (!base) continue;
     const png = path.join(base, "build", "icon.png");
     const ico = path.join(base, "build", "icon.ico");
-    if (fs.existsSync(png)) return nativeImage.createFromPath(png);
-    if (fs.existsSync(ico)) return nativeImage.createFromPath(ico);
+    if (fs.existsSync(png)) {
+      const img = loadTrayIcon(png);
+      if (img) return img;
+    }
+    if (fs.existsSync(ico)) {
+      const img = loadTrayIcon(ico);
+      if (img) return img;
+    }
   }
   console.warn("Tray icon not found; tray may appear blank");
   return null;
@@ -118,8 +168,11 @@ const toggleWindow = () => {
 };
 
 const createTray = () => {
-  const icon = getTrayIcon();
+  const icon = isMac ? nativeImage.createEmpty() : getTrayIcon();
   tray = new Tray(icon || nativeImage.createEmpty());
+  if (isMac && trayEmoji) {
+    tray.setTitle(trayEmoji);
+  }
   const menu = Menu.buildFromTemplate([
     { label: "開啟視窗", click: () => toggleWindow() },
     { label: "啟動 Helper", click: () => startHelper() },
@@ -148,12 +201,14 @@ const stopHelper = () => {
   }
   helperProc = null;
   helperStatus = { running: false, lastMessage: "" };
+  rebuildMacMenu();
   return helperStatus;
 };
 
 app.whenReady().then(() => {
   createWindow();
   createTray();
+  rebuildMacMenu();
 
   ipcMain.handle("helper:start", () => startHelper());
 
